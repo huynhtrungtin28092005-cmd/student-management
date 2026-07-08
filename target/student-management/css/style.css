@@ -1,0 +1,98 @@
+body {
+    font-family: Tahoma, sans-serif;
+    background-color: #Fdf5e6; /* Old Lace color - vintage feel */
+    color: #4a3b32; /* Dark brown text */
+    margin: 30px;
+}
+
+.container {
+    max-width: 850px;
+    margin: 0 auto;
+    background-color: #fff9e6; /* Light yellow background for container */
+    padding: 25px;
+    border: 3px solid #8b5a2b; /* Thick brown border */
+    border-radius: 8px; /* Slightly rounded corners */
+}
+
+h2 {
+    color: #8b4513; /* Saddle brown header */
+    text-transform: uppercase;
+    border-bottom: 2px dashed #cd853f; /* Dashed underline for header */
+    padding-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #ffffff;
+}
+
+table, th, td {
+    border: 2px solid #a0522d; /* Sienna brown borders for table */
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #deb887; /* Burlywood color for header background */
+    color: #3e2723;
+    font-weight: bold;
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 15px;
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+    border: 2px solid #3e2723; /* Dark brown border around buttons */
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #d2691e; /* Chocolate orange button */
+}
+
+.btn-primary:hover {
+    background-color: #a0522d; /* Darker orange on hover */
+}
+
+.btn-danger {
+    background-color: #800000; /* Maroon red button */
+}
+
+.btn-danger:hover {
+    background-color: #8b0000;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #5c4033;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 2px solid #cd853f; /* Peru brown borders for inputs */
+    background-color: #fffaf0;
+    color: #333;
+}
+
+.header-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

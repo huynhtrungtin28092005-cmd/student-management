@@ -1,0 +1,190 @@
+package com.studentmvc.controller;
+
+import com.studentmvc.dao.StudentDAO;
+import com.studentmvc.model.Student;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+import java.io.IOException;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.util.List;
+
+@WebServlet({"/students", "/new", "/insert", "/delete", "/edit", "/update", "/list"})
+public class StudentServlet extends HttpServlet {
+
+    private StudentDAO studentDAO;
+
+    @Override
+    public void init() {
+        studentDAO = new StudentDAO();
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response)
+            throws ServletException, IOException {
+
+        doGet(request, response);
+
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response)
+            throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
+        // ===== KIỂM TRA ĐĂNG NHẬP =====
+        HttpSession session = request.getSession(false);
+
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
+        // ==============================
+
+        String action = request.getServletPath();
+
+        try {
+
+            switch (action) {
+
+                case "/new":
+                    showNewForm(request, response);
+                    break;
+
+                case "/insert":
+                    insertStudent(request, response);
+                    break;
+
+                case "/delete":
+                    deleteStudent(request, response);
+                    break;
+
+                case "/edit":
+                    showEditForm(request, response);
+                    break;
+
+                case "/update":
+                    updateStudent(request, response);
+                    break;
+
+                default:
+                    listStudent(request, response);
+                    break;
+            }
+
+        } catch (SQLException e) {
+
+            throw new ServletException(e);
+
+        }
+
+    }
+
+    private void listStudent(HttpServletRequest request,
+                             HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+
+        List<Student> listStudent = studentDAO.selectAllStudents();
+
+        request.setAttribute("listStudent", listStudent);
+
+        request.getRequestDispatcher("student-list.jsp")
+                .forward(request, response);
+
+    }
+
+    private void showNewForm(HttpServletRequest request,
+                             HttpServletResponse response)
+            throws ServletException, IOException {
+
+        request.getRequestDispatcher("student-form.jsp")
+                .forward(request, response);
+
+    }
+
+    private void showEditForm(HttpServletRequest request,
+                              HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Student existingStudent = studentDAO.selectStudent(id);
+
+        request.setAttribute("student", existingStudent);
+
+        request.getRequestDispatcher("student-form.jsp")
+                .forward(request, response);
+
+    }
+
+    private void insertStudent(HttpServletRequest request,
+                               HttpServletResponse response)
+            throws SQLException, IOException {
+
+        String studentCode = request.getParameter("studentCode");
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String dobStr = request.getParameter("dob");
+
+        Date dob = (dobStr != null && !dobStr.isEmpty())
+                ? Date.valueOf(dobStr)
+                : null;
+
+        String major = request.getParameter("major");
+
+        Student student = new Student(studentCode, name, email, dob, major);
+
+        studentDAO.insertStudent(student);
+
+        response.sendRedirect("list");
+
+    }
+
+    private void updateStudent(HttpServletRequest request,
+                               HttpServletResponse response)
+            throws SQLException, IOException {
+
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        String studentCode = request.getParameter("studentCode");
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String dobStr = request.getParameter("dob");
+
+        Date dob = (dobStr != null && !dobStr.isEmpty())
+                ? Date.valueOf(dobStr)
+                : null;
+
+        String major = request.getParameter("major");
+
+        Student student = new Student(id, studentCode, name, email, dob, major);
+
+        studentDAO.updateStudent(student);
+
+        response.sendRedirect("list");
+
+    }
+
+    private void deleteStudent(HttpServletRequest request,
+                               HttpServletResponse response)
+            throws SQLException, IOException {
+
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        studentDAO.deleteStudent(id);
+
+        response.sendRedirect("list");
+
+    }
+
+}
